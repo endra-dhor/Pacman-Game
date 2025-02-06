@@ -68,7 +68,7 @@ private:
 class Ghost {
 public:
     Ghost(sf::Color color, sf::Vector2f position) {
-        shape.setSize(sf::Vector2f(TILE_SIZE-15, TILE_SIZE-15));
+        shape.setSize(sf::Vector2f(TILE_SIZE-4, TILE_SIZE-4));
         shape.setFillColor(color);
         shape.setPosition(position);
     }
@@ -107,8 +107,15 @@ int main() {
 
     Pacman pacman;
     std::vector<Ghost> ghosts;
-    ghosts.emplace_back(sf::Color::Red, sf::Vector2f(8 * TILE_SIZE, 4 * TILE_SIZE));
+    ghosts.emplace_back(sf::Color::Red, sf::Vector2f(15 * TILE_SIZE, 4 * TILE_SIZE));
     ghosts.emplace_back(sf::Color::Cyan, sf::Vector2f(3 * TILE_SIZE, 4 * TILE_SIZE));
+    ghosts.emplace_back(sf::Color::Green, sf::Vector2f(3 * TILE_SIZE, 10 * TILE_SIZE));
+
+    ghosts.emplace_back(sf::Color::Yellow, sf::Vector2f(15 * TILE_SIZE, 14 * TILE_SIZE));
+    ghosts.emplace_back(sf::Color::Magenta, sf::Vector2f(5 * TILE_SIZE, 15 * TILE_SIZE));
+
+
+
 
     sf::Clock clock;
     float speed = 100.0f;
@@ -167,14 +174,21 @@ int main() {
             }
 
             // Move ghosts randomly
+            int  tempspeed= 1;
+            int dir = rand() % 4;
             for (auto& ghost : ghosts) {
-                int dir = rand() % 4;
+
+
+
+
                 sf::Vector2f ghostDir(0.0f, 0.0f);
                 switch (dir) {
-                    case 0: ghostDir.x = -speed * deltaTime.asSeconds()* 7; break;
-                    case 1: ghostDir.x = speed * deltaTime.asSeconds()* 5; break;
-                    case 2: ghostDir.y = -speed * deltaTime.asSeconds()* 4; break;
-                    case 3: ghostDir.y = speed * deltaTime.asSeconds()* 8; break;
+                    std::cout<<"direction\n"<<dir;
+                    case 0: ghostDir.x = -speed * deltaTime.asSeconds()* tempspeed; break;
+
+                    case 1: ghostDir.x = speed * deltaTime.asSeconds()* tempspeed; break;
+                    case 2: ghostDir.y = -speed * deltaTime.asSeconds()* tempspeed; break;
+                    case 3: ghostDir.y = speed * deltaTime.asSeconds()* tempspeed; break;
 
                 }
 
@@ -191,7 +205,11 @@ int main() {
                     !isCollision(ghostNextBounds, ghostRightTile, ghostTopTile) &&
                     !isCollision(ghostNextBounds, ghostLeftTile, ghostBottomTile) &&
                     !isCollision(ghostNextBounds, ghostRightTile, ghostBottomTile)) {
+                    tempspeed = 10;
                     ghost.move(ghostDir);
+                }else{
+                     tempspeed = dir * 10;
+                     dir = rand() % 4;
                 }
             }
 
@@ -244,7 +262,7 @@ int main() {
                 sf::Text gameOverText;
                 gameOverText.setFont(font);
                 gameOverText.setString("Game Over! Final Score: " + std::to_string(score));
-                gameOverText.setCharacterSize(48);
+                gameOverText.setCharacterSize(40);
                 gameOverText.setFillColor(sf::Color::Red);
                 gameOverText.setPosition(window.getSize().x / 2 - 250, window.getSize().y / 2 - 50);
                 window.draw(gameOverText);
